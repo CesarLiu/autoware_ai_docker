@@ -1,0 +1,9 @@
+# VS Code files
+.vscode
+
+# Logs
+/Autoware/log 
+
+# build and install
+/Autoware/build
+/Autoware/install
