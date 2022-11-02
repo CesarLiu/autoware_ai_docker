@@ -4,7 +4,7 @@ set -e
 
 # Default settings
 CUDA="on"
-IMAGE_NAME="autoware/autoware"
+IMAGE_NAME="fortiss/autoware"
 TAG_PREFIX="local"
 ROS_DISTRO="melodic"
 BASE_ONLY="false"

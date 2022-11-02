@@ -4,17 +4,13 @@ set -e
 
 # Default settings
 CUDA="on"
-IMAGE_NAME="fortiss/autoware"
+IMAGE_NAME="autoware/autoware"
 TAG_PREFIX="latest"
 ROS_DISTRO="melodic"
 BASE_ONLY="false"
 PRE_RELEASE="off"
 AUTOWARE_HOST_DIR=""
 USER_ID="$(id -u)"
-GROUP_ID="$(id -g)"
-DEV_CONTAINER="autoware_ros_${USER}"
-DEV_INSIDE="in-aw-docker"
-
 
 function usage() {
     echo "Usage: $0 [OPTIONS]"
@@ -87,7 +83,7 @@ while true; do
       shift 2
       ;;
     -s|--skip-uid-fix)
-      USER_ID=1001
+      USER_ID=1000
       shift 1
       ;;
     -t|--tag-prefix)
@@ -159,35 +155,14 @@ mkdir -p $SHARED_HOST_DIR
 
 IMAGE=$IMAGE_NAME:$TAG_PREFIX-$ROS_DISTRO$SUFFIX
 echo "Launching $IMAGE"
+
 docker run \
     -it --rm \
     $VOLUMES \
-    --name "${DEV_CONTAINER}" \
-    -e DOCKER_USER="${USER}" \
-    -e USER="${USER}" \
-    -e DOCKER_USER_ID="${uid}" \
-    -e DOCKER_GRP_ID="${gid}" \
-    -e DOCKER_IMG="${IMAGE}" \
-    --privileged \
-    --net=host \
-    --add-host "$(hostname):127.0.0.1" \
-    --add-host "${DEV_INSIDE}:127.0.0.1" \
-    --hostname "${DEV_INSIDE}" \
-    --pid=host \
     --env="XAUTHORITY=${XAUTH}" \
     --env="DISPLAY=${DISPLAY}" \
     --env="USER_ID=$USER_ID" \
-    -v /dev/null:/dev/null \
+    --privileged \
+    --net=host \
     $RUNTIME \
-    $IMAGE \
-    /bin/bash
-
-if [ $? -ne 0 ]; then
-    error "Failed to start docker container \"${DEV_CONTAINER}\" based on image: $IMAGE"
-    exit 1
-fi
-
-ok "Congratulations! You have successfully finished setting up Autoware1 Dev Environment."
-ok "To login into the newly created ${DEV_CONTAINER} container, please run the following command:"
-ok "  bash generic/exec.sh"
-ok "Enjoy!"
+    $IMAGE

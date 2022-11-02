@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         gconf2 \
         gnome-terminal \
         gosu \
+        git \
         language-pack-en \
         libarmadillo-dev \
         libcanberra-gtk-module \
@@ -47,6 +48,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         tmux \
         v4l-utils \
         vim \
+        nano\
+        software-properties-common\
+        apt-transport-https\
+        ca-certificates\
+        curl\ 
+        tmux\
         wget && \
         pip3 install -U --no-cache-dir setuptools && \
         rm -rf /var/lib/apt/lists/*
@@ -60,7 +67,7 @@ RUN update-locale LANG=en_US.UTF-8 LC_MESSAGES=POSIX
 # Add user
 ENV USERNAME autoware
 ARG USER_ID=1000
-ARG GROUP_ID=15214
+ARG GROUP_ID=1002
 ENV PULSE_SERVER /run/pulse/native
 
 RUN groupadd --gid $GROUP_ID $USERNAME && \
@@ -86,6 +93,16 @@ RUN apt-get update && \
     sed "s/\$ROS_DISTRO/$ROS_DISTRO/g" "/tmp/dependencies" | xargs apt-get install -y && \
     rm -rf /var/lib/apt/lists/*
 
+#
+# Install ueye framework
+#
+COPY ./ids-software-suite-linux-64-4.95.2-archive.tgz /tmp
+RUN tar -xzvf /tmp/ids-software-suite-linux-64-4.95.2-archive.tgz && \
+    chmod +x /tmp/ueye_4.95.2.1886_amd64.run &&\
+    bash /tmp/ueye_4.95.2.1886_amd64.run &&\
+    rm -rf /tmp/ueye* &&\
+    rm -rf /tmp/ids-*
+
 USER autoware
 
 RUN rosdep update
@@ -104,3 +121,4 @@ COPY ./entrypoint.sh /tmp
 # hadolint ignore=DL3002
 USER root
 ENTRYPOINT ["/tmp/entrypoint.sh"]
+WORKDIR /autoware
