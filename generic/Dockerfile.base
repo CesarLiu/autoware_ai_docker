@@ -96,12 +96,12 @@ RUN apt-get update && \
 #
 # Install ueye framework
 #
-COPY ./ids-software-suite-linux-64-4.95.2-archive.tgz /tmp
-RUN tar -xzvf /tmp/ids-software-suite-linux-64-4.95.2-archive.tgz && \
-    chmod +x /tmp/ueye_4.95.2.1886_amd64.run &&\
-    bash /tmp/ueye_4.95.2.1886_amd64.run &&\
-    rm -rf /tmp/ueye* &&\
-    rm -rf /tmp/ids-*
+# COPY ./ids-software-suite-linux-64-4.95.2-archive.tgz /tmp
+# RUN tar -xzvf /tmp/ids-software-suite-linux-64-4.95.2-archive.tgz && \
+#     chmod +x /tmp/ueye_4.95.2.1886_amd64.run &&\
+#     bash /tmp/ueye_4.95.2.1886_amd64.run &&\
+#     rm -rf /tmp/ueye* &&\
+#     rm -rf /tmp/ids-*
 
 USER autoware
 

@@ -178,6 +178,8 @@ docker run \
     --env="DISPLAY=${DISPLAY}" \
     --env="USER_ID=$USER_ID" \
     -v /dev/null:/dev/null \
+    -v /dev/bus/usb:/dev/bus/usb \
+    -v /var/run:/var/run \
     $RUNTIME \
     $IMAGE \
     /bin/bash
